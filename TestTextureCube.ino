@@ -9,6 +9,8 @@ using namespace Eigen;
 #include "surface00.h"
 #include "surface01.h"
 #include "surface02.h"
+#include "surface03.h"
+#include "surface04.h"
 #include "surface05.h"
 
 #define LGFX_AUTODETECT
@@ -16,7 +18,7 @@ using namespace Eigen;
 
 static LGFX lcd;
 static LGFX_Sprite sprite[2];
-static LGFX_Sprite sprite_surface[8];
+static LGFX_Sprite sprite_surface[12];
 
 //#pragma GCC optimize ("O3")
 struct point3df{ float x, y, z;};
@@ -36,12 +38,12 @@ struct point3df cubef[8] ={ // cube edge length is 2*U
 };
  
 struct surface s[6] = {// define the surfaces
-  { {2, 3, 0, 1}, 0 ,&surface02,{0,0}}, // bottom0
+  { {2, 3, 0, 1}, 0 ,&surface01,{0,0}}, // bottom0
   { {7, 6, 5, 4}, 0 ,&surface02,{0,0}}, // top0
   { {4, 0, 1, 5}, 0 ,&surface05,{0,0}}, // back0
   { {3, 7, 6, 2}, 0 ,&surface00,{0,0}}, // front0
-  { {6, 2, 1, 5}, 0 ,&surface01,{0,0}}, // right1
-  { {3, 7, 4, 0}, 0 ,&surface01,{0,0}}, // left1
+  { {6, 2, 1, 5}, 0 ,&surface03,{0,0}}, // right1
+  { {3, 7, 4, 0}, 0 ,&surface04,{0,0}}, // left1
 };
 
 struct point3df cubef2[8];
@@ -132,71 +134,22 @@ void setup(void){
   sprite[1].createSprite(ws,hs);
 
 
-  //for (int i = 0; i < 6; i++)
+  for (int i = 0; i < 6; i++)
   {
-    int i=0;
-    sprite_surface[0].createSprite(s[i].pImage->width ,s[i].pImage->height);
-    sprite_surface[0].pushImage(  0, 0, s[i].pImage->width, s[i].pImage->height, (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
-    sprite_surface[0].setColor(lcd.color565(0,0,0));
-    sprite_surface[0].fillTriangle(0, 0, 0, s[i].pImage->height-1, s[i].pImage->width-1, s[i].pImage->height-1);
+    sprite_surface[2*i].createSprite(s[i].pImage->width ,s[i].pImage->height);
+    sprite_surface[2*i].pushImage(  0, 0, s[i].pImage->width, s[i].pImage->height, (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
+    sprite_surface[2*i].setColor(lcd.color565(0,0,0));
+    sprite_surface[2*i].fillTriangle(0, 0, 0, s[i].pImage->height-1, s[i].pImage->width-1, s[i].pImage->height-1);
   
-    sprite_surface[1].createSprite(s[i].pImage->width ,s[i].pImage->height);
-    sprite_surface[1].pushImage(  0, 0,s[i].pImage->width ,s[i].pImage->height , (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
-    sprite_surface[1].setColor(lcd.color565(0,0,0));
-    sprite_surface[1].fillTriangle(0, 0, s[i].pImage->width-1, s[i].pImage->height-1, s[i].pImage->width-1,0);
-  }
-  s[0].sprite[0]=&sprite_surface[0];
-  s[0].sprite[1]=&sprite_surface[1];
-  s[1].sprite[0]=&sprite_surface[0];
-  s[1].sprite[1]=&sprite_surface[1];
+    sprite_surface[2*i+1].createSprite(s[i].pImage->width ,s[i].pImage->height);
+    sprite_surface[2*i+1].pushImage(  0, 0,s[i].pImage->width ,s[i].pImage->height , (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
+    sprite_surface[2*i+1].setColor(lcd.color565(0,0,0));
+    sprite_surface[2*i+1].fillTriangle(0, 0, s[i].pImage->width-1, s[i].pImage->height-1, s[i].pImage->width-1,0);
 
-  {
-    int i=2;
-    sprite_surface[2].createSprite(s[i].pImage->width ,s[i].pImage->height);
-    sprite_surface[2].pushImage(  0, 0, s[i].pImage->width, s[i].pImage->height, (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
-    sprite_surface[2].setColor(lcd.color565(0,0,0));
-    sprite_surface[2].fillTriangle(0, 0, 0, s[i].pImage->height-1, s[i].pImage->width-1, s[i].pImage->height-1);
-  
-    sprite_surface[3].createSprite(s[i].pImage->width ,s[i].pImage->height);
-    sprite_surface[3].pushImage(  0, 0,s[i].pImage->width ,s[i].pImage->height , (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
-    sprite_surface[3].setColor(lcd.color565(0,0,0));
-    sprite_surface[3].fillTriangle(0, 0, s[i].pImage->width-1, s[i].pImage->height-1, s[i].pImage->width-1,0);
+    s[i].sprite[0]=&sprite_surface[2*i];
+    s[i].sprite[1]=&sprite_surface[2*i+1];
   }
-  s[2].sprite[0]=&sprite_surface[2];
-  s[2].sprite[1]=&sprite_surface[3];
   
-  {
-    int i=3;
-    sprite_surface[4].createSprite(s[i].pImage->width ,s[i].pImage->height);
-    sprite_surface[4].pushImage(  0, 0, s[i].pImage->width, s[i].pImage->height, (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
-    sprite_surface[4].setColor(lcd.color565(0,0,0));
-    sprite_surface[4].fillTriangle(0, 0, 0, s[i].pImage->height-1, s[i].pImage->width-1, s[i].pImage->height-1);
-  
-    sprite_surface[5].createSprite(s[i].pImage->width ,s[i].pImage->height);
-    sprite_surface[5].pushImage(  0, 0,s[i].pImage->width ,s[i].pImage->height , (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
-    sprite_surface[5].setColor(lcd.color565(0,0,0));
-    sprite_surface[5].fillTriangle(0, 0, s[i].pImage->width-1, s[i].pImage->height-1, s[i].pImage->width-1,0);
-  }
-  s[3].sprite[0]=&sprite_surface[4];
-  s[3].sprite[1]=&sprite_surface[5];
-
-  {
-    int i=4;
-    sprite_surface[6].createSprite(s[i].pImage->width ,s[i].pImage->height);
-    sprite_surface[6].pushImage(  0, 0, s[i].pImage->width, s[i].pImage->height, (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
-    sprite_surface[6].setColor(lcd.color565(0,0,0));
-    sprite_surface[6].fillTriangle(0, 0, 0, s[i].pImage->height-1, s[i].pImage->width-1, s[i].pImage->height-1);
-  
-    sprite_surface[7].createSprite(s[i].pImage->width ,s[i].pImage->height);
-    sprite_surface[7].pushImage(  0, 0,s[i].pImage->width ,s[i].pImage->height , (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
-    sprite_surface[7].setColor(lcd.color565(0,0,0));
-    sprite_surface[7].fillTriangle(0, 0, s[i].pImage->width-1, s[i].pImage->height-1, s[i].pImage->width-1,0);
-  }
-  s[4].sprite[0]=&sprite_surface[6];
-  s[4].sprite[1]=&sprite_surface[7];
-  s[5].sprite[0]=&sprite_surface[6];
-  s[5].sprite[1]=&sprite_surface[7];
-
   lcd.startWrite();
   lcd.fillScreen(TFT_DARKGREY);
   lcd.endWrite();
@@ -263,8 +216,6 @@ void loop() {
     {
       int ii = ss[i];
       draw_surface(ii,flip);
-//      if(ii==2 || ii==3)draw_front(ii,flip);
-//      else draw_side(ii,flip);
     }
   }
 
