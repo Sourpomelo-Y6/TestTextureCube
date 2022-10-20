@@ -37,17 +37,28 @@ int color_array[8]={
   TFT_SKYBLUE,
 };
 
+//struct point3df cubef[8] ={ // cube edge length is 2*U
+//  {  U, -U, UD },//0
+//  { -U, -U, UD },//1
+//  { -U, -U, -UD },//2-
+//  {  U, -U, -UD },//3-
+//  {  U,  U, UD },//4
+//  { -U,  U, UD },//5
+//  { -U,   U, -UD },//6-
+//  {  U,   U, -UD },//7-
+//};
+
 struct point3df cubef[8] ={ // cube edge length is 2*U
-  {  U, -U, UD },//0
-  { -U, -U, UD },//1
-  { -U, -U, -UD },//2-
-  {  U, -U, -UD },//3-
-  {  U,  U, UD },//4
-  { -U,  U, UD },//5
-  { -U,   U, -UD },//6-
-  {  U,   U, -UD },//7-
+  {  U,  U,  UD },//0
+  {  U, -U,  UD },//1
+  {  U, -U, -UD },//2-
+  {  U,  U, -UD },//3-
+  { -U,  U,  UD },//4
+  { -U, -U,  UD },//5
+  { -U, -U, -UD },//6-
+  { -U,  U, -UD },//7-
 };
- 
+
 //struct surface s[6] = {// define the surfaces
 //  { {2, 3, 0, 1}, 0 ,&surface01,{0,0}}, // bottom0 right
 //  { {7, 6, 5, 4}, 0 ,&surface02,{0,0}}, // top0 left
