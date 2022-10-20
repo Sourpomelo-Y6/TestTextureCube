@@ -171,13 +171,13 @@ void setup(void){
     sprite_surface[2*i].createSprite(s[i].pImage->width ,s[i].pImage->height);
     sprite_surface[2*i].pushImage(  0, 0, s[i].pImage->width, s[i].pImage->height, (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
     sprite_surface[2*i].setColor(lcd.color565(0,0,0));
-    sprite_surface[2*i].fillTriangle(0, 0, 0, s[i].pImage->height-1, s[i].pImage->width-1, s[i].pImage->height-1);
+    sprite_surface[2*i].fillTriangle(0, 1, 0, s[i].pImage->height-1, s[i].pImage->width-2, s[i].pImage->height-1);
     //sprite_surface[2*i].fillTriangle(0, 0, s[i].pImage->width-1, 0, 0,s[i].pImage->height-1);
   
     sprite_surface[2*i+1].createSprite(s[i].pImage->width ,s[i].pImage->height);
     sprite_surface[2*i+1].pushImage(  0, 0,s[i].pImage->width ,s[i].pImage->height , (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
     sprite_surface[2*i+1].setColor(lcd.color565(0,0,0));
-    sprite_surface[2*i+1].fillTriangle(0, 0, s[i].pImage->width-1, s[i].pImage->height-1, s[i].pImage->width-1,0);
+    sprite_surface[2*i+1].fillTriangle(1, 0, s[i].pImage->width-1, s[i].pImage->height-2, s[i].pImage->width-1,0);
     //sprite_surface[2*i+1].fillTriangle(s[i].pImage->width-1, 0, 0, s[i].pImage->height-1, s[i].pImage->width-1, s[i].pImage->height-1);
     
     s[i].sprite[0]=&sprite_surface[2*i];
