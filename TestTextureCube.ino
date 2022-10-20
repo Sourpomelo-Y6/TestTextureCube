@@ -26,24 +26,44 @@ struct surface{ uint8_t p[4]; int16_t z;const struct gimp_image* pImage; LGFX_Sp
 #define U  70     
 #define UD  26
 
+int color_array[8]={
+  TFT_WHITE,
+  TFT_RED,
+  TFT_ORANGE,
+  TFT_PINK,
+  TFT_PURPLE,
+  TFT_BLUE,
+  TFT_GREEN,
+  TFT_SKYBLUE,
+};
+
 struct point3df cubef[8] ={ // cube edge length is 2*U
-  { -U, U, UD },//0
-  {  U, U, UD },//1
-  {  U, U, -UD },//2-
-  { -U, U, -UD },//3-
-  { -U,  -U, UD },//4
-  {  U,  -U, UD },//5
-  {  U,  -U, -UD },//6-
-  { -U,  -U, -UD },//7-
+  {  U, -U, UD },//0
+  { -U, -U, UD },//1
+  { -U, -U, -UD },//2-
+  {  U, -U, -UD },//3-
+  {  U,  U, UD },//4
+  { -U,  U, UD },//5
+  { -U,   U, -UD },//6-
+  {  U,   U, -UD },//7-
 };
  
+//struct surface s[6] = {// define the surfaces
+//  { {2, 3, 0, 1}, 0 ,&surface01,{0,0}}, // bottom0 right
+//  { {7, 6, 5, 4}, 0 ,&surface02,{0,0}}, // top0 left
+//  { {4, 0, 1, 5}, 0 ,&surface05,{0,0}}, // back0
+//  { {3, 7, 6, 2}, 0 ,&surface00,{0,0}}, // front0
+//  { {6, 2, 1, 5}, 0 ,&surface03,{0,0}}, // right1 bottom
+//  { {3, 7, 4, 0}, 0 ,&surface04,{0,0}}, // left1 top
+//};
+
 struct surface s[6] = {// define the surfaces
-  { {2, 3, 0, 1}, 0 ,&surface01,{0,0}}, // bottom0
-  { {7, 6, 5, 4}, 0 ,&surface02,{0,0}}, // top0
-  { {4, 0, 1, 5}, 0 ,&surface05,{0,0}}, // back0
-  { {3, 7, 6, 2}, 0 ,&surface00,{0,0}}, // front0
-  { {6, 2, 1, 5}, 0 ,&surface03,{0,0}}, // right1
-  { {3, 7, 4, 0}, 0 ,&surface04,{0,0}}, // left1
+  { {2, 3, 0, 1}, 0 ,&surface03,{0,0}}, // bottom
+  { {7, 6, 5, 4}, 0 ,&surface04,{0,0}}, // top
+  { {4, 5, 1, 0}, 0 ,&surface05,{0,0}}, // back
+  { {6, 7, 3, 2}, 0 ,&surface00,{0,0}}, // front
+  { {6, 2, 1, 5}, 0 ,&surface02,{0,0}}, // right
+  { {3, 7, 4, 0}, 0 ,&surface01,{0,0}}, // left
 };
 
 struct point3df cubef2[8];
@@ -130,9 +150,10 @@ void setup(void){
   ws = 160;
   hs = 160;
   
-  sprite[0].createSprite(ws,hs);
-  sprite[1].createSprite(ws,hs);
-
+  for (int i = 0; i < 2; i++)
+  {
+    sprite[i].createSprite(ws,hs);
+  }
 
   for (int i = 0; i < 6; i++)
   {
@@ -140,12 +161,14 @@ void setup(void){
     sprite_surface[2*i].pushImage(  0, 0, s[i].pImage->width, s[i].pImage->height, (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
     sprite_surface[2*i].setColor(lcd.color565(0,0,0));
     sprite_surface[2*i].fillTriangle(0, 0, 0, s[i].pImage->height-1, s[i].pImage->width-1, s[i].pImage->height-1);
+    //sprite_surface[2*i].fillTriangle(0, 0, s[i].pImage->width-1, 0, 0,s[i].pImage->height-1);
   
     sprite_surface[2*i+1].createSprite(s[i].pImage->width ,s[i].pImage->height);
     sprite_surface[2*i+1].pushImage(  0, 0,s[i].pImage->width ,s[i].pImage->height , (lgfx:: rgb565_t*)s[i].pImage->pixel_data);
     sprite_surface[2*i+1].setColor(lcd.color565(0,0,0));
     sprite_surface[2*i+1].fillTriangle(0, 0, s[i].pImage->width-1, s[i].pImage->height-1, s[i].pImage->width-1,0);
-
+    //sprite_surface[2*i+1].fillTriangle(s[i].pImage->width-1, 0, 0, s[i].pImage->height-1, s[i].pImage->width-1, s[i].pImage->height-1);
+    
     s[i].sprite[0]=&sprite_surface[2*i];
     s[i].sprite[1]=&sprite_surface[2*i+1];
   }
@@ -206,7 +229,7 @@ void loop() {
     for (int i = 0; i < 8; i++)
     {
       //sprite[flip].drawRect( (int)cubef2[i].x-2, (int)cubef2[i].y-2, 4, 4 , 0xF000);
-      sprite[flip].drawRect( (int)cubef2[i].y-2, (int)cubef2[i].x-2, 4, 4 , 0xF000);
+      sprite[flip].drawRect( (int)cubef2[i].y-2, (int)cubef2[i].x-2, 4, 4 , color_array[i]);
       //Serial.printf("%d,%f,%f,\r\n",i,cubef2[i].x, cubef2[i].y); 
     }
     
